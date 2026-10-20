@@ -11,7 +11,7 @@ software across fintech, edtech hardware, and SaaS.
 
 **Stack:** Go · Python · JavaScript / React · SQL · MySQL · Docker · Linux · Git
 
-**Systems:** VMware ESXi / vSphere / Proxmox · RabbitMQ · Redis · GitHub Actions · Octopus Deploy
+**Systems:** VMware ESXi · Proxmox · RabbitMQ · Redis · GitHub Actions · Octopus Deploy
 
 🔭 Currently building agentic workflows
 
