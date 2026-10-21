@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: write
-  metadata: write
-  administration: write
 
 jobs:
   fix:
@@ -24,12 +22,11 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/andradei/andradei/topics \
             -d '{"names":["agentic-ai","devops","docker","golang","linux","profile-readme","python","react","typescript"]}')
-          echo "TOPICS_RESULT $out" >> "$GITHUB_OUTPUT"
-          echo "::notice title=topics::$out"
+          echo "::notice title=topics::${out:0:600}"
           out2=$(curl -sS -w ' HTTP:%{http_code}' -X PATCH \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/andradei/andradei \
             -d '{"homepage":"https://andradei.com"}')
-          echo "HOMEPAGE_RESULT $out2" >> "$GITHUB_OUTPUT"
-          echo "::notice title=homepage::$out2"
+          echo "::notice title=homepage::${out2:0:600}"
+          echo "::notice title=token-check::$(curl -sS -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/rate_limit | head -c 300)"
