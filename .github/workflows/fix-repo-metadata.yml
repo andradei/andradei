@@ -16,16 +16,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          curl -sS -X PUT \
+          echo "--- topics ---"
+          curl -sS -w '\nHTTP %{http_code}\n' -X PUT \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/andradei/andradei/topics \
             -d '{"names":["agentic-ai","devops","docker","golang","linux","profile-readme","python","react","typescript"]}'
-          echo
-          curl -sS -X PATCH \
+          echo "--- homepage ---"
+          curl -sS -w '\nHTTP %{http_code}\n' -X PATCH \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/andradei/andradei \
             -d '{"homepage":"https://andradei.com"}'
-          echo
+          echo "--- token scopes ---"
+          curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/andradei/andradei
