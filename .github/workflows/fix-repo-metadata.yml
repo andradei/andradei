@@ -7,31 +7,29 @@ on:
 
 permissions:
   contents: write
+  metadata: write
+  administration: write
 
 jobs:
   fix:
     runs-on: ubuntu-latest
     steps:
-      - name: Fix and report
+      - name: Fix
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
-          {
-            echo "### topics"
-            curl -sS -w '\nHTTP %{http_code}\n' -X PUT \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              https://api.github.com/repos/andradei/andradei/topics \
-              -d '{"names":["agentic-ai","devops","docker","golang","linux","profile-readme","python","react","typescript"]}'
-            echo "### homepage"
-            curl -sS -w '\nHTTP %{http_code}\n' -X PATCH \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              https://api.github.com/repos/andradei/andradei \
-              -d '{"homepage":"https://andradei.com"}'
-            echo "### token"
-            curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $GH_TOKEN" \
-              https://api.github.com/repos/andradei/andradei | head -c 400
-          } > "$GITHUB_STEP_SUMMARY"
-          cat "$GITHUB_STEP_SUMMARY"
+          out=$(curl -sS -w ' HTTP:%{http_code}' -X PUT \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/andradei/andradei/topics \
+            -d '{"names":["agentic-ai","devops","docker","golang","linux","profile-readme","python","react","typescript"]}')
+          echo "TOPICS_RESULT $out" >> "$GITHUB_OUTPUT"
+          echo "::notice title=topics::$out"
+          out2=$(curl -sS -w ' HTTP:%{http_code}' -X PATCH \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/andradei/andradei \
+            -d '{"homepage":"https://andradei.com"}')
+          echo "HOMEPAGE_RESULT $out2" >> "$GITHUB_OUTPUT"
+          echo "::notice title=homepage::$out2"
